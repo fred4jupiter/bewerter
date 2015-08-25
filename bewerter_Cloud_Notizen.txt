@@ -177,11 +177,48 @@ ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/bewerter.j
     </configuration>
 </plugin>
 
-mvn clean install docker:build
+Image bauen:
+    mvn clean install docker:build
+oder
+    docker build -t fred4jupiter/bewerter .
 
-docker build -t fred4jupiter/bewerter .
-docker images
+Images auflisten:
+    docker images
 
-docker run -d fred4jupiter/bewerter -p 8080:8080
+Image lokal starten:
+    docker run -d fred4jupiter/bewerter -p 8080:8080
+
+Privates Repository in Tutum anlegen:
+
+Login unter https://www.tutum.co/
+Username: fred4jupiter
+Password: XXX
+
+Neuen Node einrichten:
+-> Launch new Node Cluster
+Node cluster name: demoNode
+EU Frankfurt
+t2.micro
+1 Node
+10 GB
+
+Repository einrichten:
+-> Create new Repository
+tutum.co/fred4jupiter/bewerter
 
 
+Gebautes Image hochladen:
+docker login tutum.co
+docker tag fred4jupiter/bewerter tutum.co/fred4jupiter/bewerter
+docker push tutum.co/fred4jupiter/bewerter
+
+Services -> Create Service -> Select Images -> Private Repository
+Image Tag: Latest
+Deployment Strategy: Emptiest Node
+Number of Containers: 1
+Ports: Container 8080 published Node Port 80
+Click Create Service
+
+Start Service
+
+unter Endpoints URL anschauen
