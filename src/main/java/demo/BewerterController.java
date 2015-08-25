@@ -7,9 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-/**
- * Created by michael on 24.08.15.
- */
+
 @Controller
 public class BewerterController {
 

@@ -5,13 +5,183 @@ artefact: bewerter
 
 Projekte: web, thymeleaf, MongoDB
 
-spring.thymeleaf.cache=false
+spring.thymeleaf.cache=false   in application.properties eintragen
 
-in application.properties eintragen
+@Configuration
+@EnableMongoRepositories
+public class MongoEmbeddedConfig extends AbstractMongoConfiguration {
 
-...
+    private static final String MONGO_DB_NAME = "demo_db";
+
+    @Override
+    protected String getDatabaseName() {
+        return MONGO_DB_NAME;
+    }
+
+    @Bean
+    @Override
+    public Mongo mongo() {
+        return new Fongo(MONGO_DB_NAME).getMongo();
+    }
+}
+
+@Document
+public class Rating {
+
+    @Id
+    private String id;
+
+    @Indexed(unique = true)
+    private final String name;
+
+    private Integer toll = 0;
+
+    private Integer doof = 0;
+
+    public Rating(String name) {
+        this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public Integer getToll() {
+        return toll;
+    }
+
+    public void setToll(Integer toll) {
+        this.toll = toll;
+    }
+
+    public Integer getDoof() {
+        return doof;
+    }
+
+    public void setDoof(Integer doof) {
+        this.doof = doof;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+
+    public void incrementToll() {
+        this.toll++;
+    }
+
+    public void incrementDoof() {
+        this.doof++;
+    }
+}
+
+@Controller
+public class BewerterController {
+
+    private static final String RATING_NAME = "demo";
+
+    @Autowired
+    private RatingRepository ratingRepository;
+
+    @RequestMapping
+    public ModelAndView list() {
+        Rating rating = ratingRepository.findByName(RATING_NAME);
+        if (rating == null) {
+            rating = new Rating("demo");
+            ratingRepository.save(rating);
+        }
+
+        return new ModelAndView("rating", "rating", rating);
+    }
+
+    @RequestMapping(value = "/toll", method = RequestMethod.POST)
+    public ModelAndView toll() {
+        Rating rating = ratingRepository.findByName(RATING_NAME);
+        rating.incrementToll();
+        ratingRepository.save(rating);
+        return new ModelAndView("redirect:/");
+    }
+
+    @RequestMapping(value = "/doof", method = RequestMethod.POST)
+    public ModelAndView doof(RedirectAttributes redirect) {
+        Rating rating = ratingRepository.findByName(RATING_NAME);
+        rating.incrementDoof();
+        ratingRepository.save(rating);
+        return new ModelAndView("redirect:/");
+    }
+}
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="de">
+<head>
+	<title>Bewerter</title>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
+	<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
+</head>
+<body>
+	<div data-role="page">
+		<div data-role="content">
+			<h3>Der war toll sagen <span th:text="${rating.toll}">5</span> Personen.</h3>
+			<h3>Der war doof sagen <span th:text="${rating.doof}">1</span> Personen.</h3>
+			<form th:action="@{/toll}" method="post">
+		        <div>
+		            <button type="submit" data-theme="b">Das war toll</button>
+		        </div>
+		    </form>
+		    <form th:action="@{/doof}" method="post">
+		        <div>
+		            <button type="submit" data-theme="a">Das war doof</button>
+		        </div>
+		    </form>
+		</div>
+	</div>
+</body>
+</html>
+
+
+Dockerfile anlegen
+
+FROM java:8
+
+MAINTAINER Michael Staehler <hamsterhase@gmx.de>
+
+RUN echo 'Building docker image for demo application...'
+
+VOLUME /tmp
+
+COPY target/bewerter-0.0.1-SNAPSHOT.jar bewerter.jar
+
+RUN bash -c 'touch /bewerter.jar'
+
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/bewerter.jar"]
+
+
+
+<plugin>
+    <groupId>com.spotify</groupId>
+    <artifactId>docker-maven-plugin</artifactId>
+    <version>0.3.1</version>
+    <configuration>
+        <imageName>fred4jupiter/${project.artifactId}</imageName>
+        <dockerDirectory>${project.basedir}</dockerDirectory>
+        <resources>
+            <resource>
+                <targetPath>/</targetPath>
+                <directory>${project.build.directory}</directory>
+                <include>${project.build.finalName}.jar</include>
+            </resource>
+        </resources>
+    </configuration>
+</plugin>
+
+mvn clean install docker:build
 
 docker build -t fred4jupiter/bewerter .
 docker images
 
 docker run -d fred4jupiter/bewerter -p 8080:8080
+
+

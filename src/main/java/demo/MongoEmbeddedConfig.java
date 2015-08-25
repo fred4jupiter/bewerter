@@ -23,6 +23,4 @@ public class MongoEmbeddedConfig extends AbstractMongoConfiguration {
     public Mongo mongo() {
         return new Fongo(MONGO_DB_NAME).getMongo();
     }
-
-
 }
