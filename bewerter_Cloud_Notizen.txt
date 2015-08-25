@@ -1,0 +1,17 @@
+Beispielprojekt unter http://start.spring.io/ erstellen
+
+groupId: de.oc.bewerter
+artefact: bewerter
+
+Projekte: web, thymeleaf, MongoDB
+
+spring.thymeleaf.cache=false
+
+in application.properties eintragen
+
+...
+
+docker build -t fred4jupiter/bewerter .
+docker images
+
+docker run -d fred4jupiter/bewerter -p 8080:8080
