@@ -29,7 +29,7 @@ public class BewerterController {
         return new ModelAndView("rating", "rating", rating);
     }
 
-    @RequestMapping(value = "/toll")
+    @RequestMapping(value = "/toll", method = RequestMethod.POST)
     public ModelAndView toll() {
         Rating rating = ratingRepository.findByName(RATING_NAME);
         rating.incrementToll();
@@ -37,7 +37,7 @@ public class BewerterController {
         return new ModelAndView("redirect:/");
     }
 
-    @RequestMapping(value = "/doof")
+    @RequestMapping(value = "/doof", method = RequestMethod.POST)
     public ModelAndView doof(RedirectAttributes redirect) {
         Rating rating = ratingRepository.findByName(RATING_NAME);
         rating.incrementDoof();

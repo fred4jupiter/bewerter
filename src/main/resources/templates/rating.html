@@ -10,16 +10,16 @@
 <body>
 	<div data-role="page">
 		<div data-role="content">
-			<h2>Der Vortrag war toll sagen <span th:text="${rating.toll}">5</span> Personen.</h2>
-			<h2>Der Vortrag war doof sagen <span th:text="${rating.doof}">1</span> Personen.</h2>
+			<h3>Der war toll sagen <span th:text="${rating.toll}">5</span> Personen.</h3>
+			<h3>Der war doof sagen <span th:text="${rating.doof}">1</span> Personen.</h3>
 			<form th:action="@{/toll}" method="post">
 		        <div>
-		            <button type="submit">Das war toll</button>
+		            <button type="submit" data-theme="b">Das war toll</button>
 		        </div>
 		    </form>
 		    <form th:action="@{/doof}" method="post">
 		        <div>
-		            <button type="submit">Das war doof</button>
+		            <button type="submit" data-theme="a">Das war doof</button>
 		        </div>
 		    </form>
 		</div>
