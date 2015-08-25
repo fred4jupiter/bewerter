@@ -11,7 +11,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * Created by michael on 24.08.15.
  */
 @Controller
-@RequestMapping("/rating")
 public class BewerterController {
 
     private static final String RATING_NAME = "demo";

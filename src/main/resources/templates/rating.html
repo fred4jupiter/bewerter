@@ -7,12 +7,12 @@
 <body>
     <div>Der Vortrag war toll sagen <span th:text="${rating.toll}">5</span> Personen.</div>
     <div>Der Vortrag war doof sagen <span th:text="${rating.doof}">1</span> Personen.</div>
-    <form th:action="@{/rating/toll}" method="post">
+    <form th:action="@{/toll}" method="post">
         <div>
             <button type="submit">Das war toll</button>
         </div>
     </form>
-    <form th:action="@{/rating/doof}" method="post">
+    <form th:action="@{/doof}" method="post">
         <div>
             <button type="submit">Das war doof</button>
         </div>
