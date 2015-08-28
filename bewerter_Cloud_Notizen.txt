@@ -5,7 +5,11 @@ artefact: bewerter
 
 Projekte: web, thymeleaf, MongoDB
 
+-------------------------------------------------------
+
 spring.thymeleaf.cache=false   in application.properties eintragen
+
+-------------------------------------------------------
 
 @Configuration
 @EnableMongoRepositories
@@ -24,6 +28,8 @@ public class MongoEmbeddedConfig extends AbstractMongoConfiguration {
         return new Fongo(MONGO_DB_NAME).getMongo();
     }
 }
+
+-------------------------------------------------------
 
 @Document
 public class Rating {
@@ -76,6 +82,8 @@ public class Rating {
     }
 }
 
+-------------------------------------------------------
+
 @Controller
 public class BewerterController {
 
@@ -112,6 +120,8 @@ public class BewerterController {
     }
 }
 
+-------------------------------------------------------
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="de">
 <head>
@@ -141,6 +151,7 @@ public class BewerterController {
 </body>
 </html>
 
+-------------------------------------------------------
 
 Dockerfile anlegen
 
@@ -159,6 +170,7 @@ RUN bash -c 'touch /bewerter.jar'
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/bewerter.jar"]
 
 
+-------------------------------------------------------
 
 <plugin>
     <groupId>com.spotify</groupId>
@@ -176,6 +188,8 @@ ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/bewerter.j
         </resources>
     </configuration>
 </plugin>
+
+-------------------------------------------------------
 
 Image bauen:
     mvn clean install docker:build
