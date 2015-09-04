@@ -15,6 +15,12 @@ spring.thymeleaf.cache=false   in application.properties eintragen
 
 -------------------------------------------------------
 
+ggf. spring loaded verwenden:
+
+VM-Arguments: -Djavaagent:/home/michael/SW/sts-3.7.0.RELEASE/springloaded-1.2.5.RELEASE.jar -Dnoverify
+
+-------------------------------------------------------
+
 Fongo nutzen:
 
 <dependency>
