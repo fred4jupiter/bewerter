@@ -1,13 +1,27 @@
+VM Linux Mint 17 starten
+
 Beispielprojekt unter http://start.spring.io/ erstellen
+oder in STS New Spring Starter Project
 
 groupId: de.oc.bewerter
 artefact: bewerter
 
 Projekte: web, thymeleaf, MongoDB
+Boot Version: 1.2.5
 
 -------------------------------------------------------
 
 spring.thymeleaf.cache=false   in application.properties eintragen
+
+-------------------------------------------------------
+
+Fongo nutzen:
+
+<dependency>
+	<groupId>com.lordofthejars</groupId>
+	<artifactId>nosqlunit-mongodb</artifactId>
+	<version>0.8.1</version>
+</dependency>
 
 -------------------------------------------------------
 
@@ -84,6 +98,14 @@ public class Rating {
 
 -------------------------------------------------------
 
+RatingRepository annlegen
+ggf. Integrationstest dazu schreiben
+
+-------------------------------------------------------
+
+list-Methode anlegen und zwei h3 headings mit Verknüpfung auf toll und doof
+
+
 @Controller
 public class BewerterController {
 
@@ -153,6 +175,12 @@ public class BewerterController {
 
 -------------------------------------------------------
 
+Danach jquery-Mobile hinzufügen:
+- siehe Snippet
+
+-------------------------------------------------------
+
+
 Dockerfile anlegen:
 
 FROM java:8
@@ -163,6 +191,8 @@ ENTRYPOINT ["java","-jar","/bewerter.jar"]
 
 
 -------------------------------------------------------
+
+ggf. plugin nutzen:
 
 <plugin>
     <groupId>com.spotify</groupId>
@@ -202,23 +232,19 @@ Login unter https://www.tutum.co/
 Username: fred4jupiter
 Password: XXX
 
-Neuen Node einrichten:
--> Launch new Node Cluster
-Node cluster name: demoNode
-EU Frankfurt
-t2.micro
-1 Node
-10 GB
-
 Repository einrichten:
 -> Create new Repository
 tutum.co/fred4jupiter/bewerter
 
+---
 
 Gebautes Image hochladen:
-docker login tutum.co
+
 docker tag fred4jupiter/bewerter tutum.co/fred4jupiter/bewerter
+docker login tutum.co
 docker push tutum.co/fred4jupiter/bewerter
+
+---
 
 Services -> Create Service -> Select Images -> Private Repository
 Image Tag: Latest
@@ -230,3 +256,14 @@ Click Create Service
 Start Service
 
 unter Endpoints URL anschauen
+
+---------------
+
+ggf. Stack anlegen
+Stackfile:
+
+bewerter:
+  image: 'tutum.co/fred4jupiter/bewerter:latest'  
+  ports:
+    - '80:8080'
+
