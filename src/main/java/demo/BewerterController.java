@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-
 @Controller
 public class BewerterController {
 
@@ -20,7 +19,7 @@ public class BewerterController {
     public ModelAndView list() {
         Rating rating = ratingRepository.findByName(RATING_NAME);
         if (rating == null) {
-            rating = new Rating("demo");
+            rating = new Rating(RATING_NAME);
             ratingRepository.save(rating);
         }
 

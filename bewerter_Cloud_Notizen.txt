@@ -1,7 +1,7 @@
 VM Linux Mint 17 starten
 
 Beispielprojekt unter http://start.spring.io/ erstellen
-oder in STS New Spring Starter Project
+oder in STS "New Spring Starter Project"
 
 groupId: de.oc.bewerter
 artefact: bewerter
@@ -10,18 +10,24 @@ Projekte: web, thymeleaf, MongoDB
 Boot Version: 1.2.5
 
 -------------------------------------------------------
+application-dev.properties:
+	spring.thymeleaf.cache=false
 
-spring.thymeleaf.cache=false   in application-dev.properties eintragen
+application-test.properties:
+	spring.thymeleaf.cache=true
+	spring.data.mongodb.host=mongodb
+	spring.data.mongodb.port=27017
 
 -------------------------------------------------------
 
 ggf. spring loaded verwenden:
 
-VM-Arguments: -Djavaagent:/home/michael/SW/sts-3.7.0.RELEASE/springloaded-1.2.5.RELEASE.jar -Dnoverify
+VM-Arguments: 
+-Djavaagent:/home/michael/springloaded-1.2.4.RELEASE.jar -Dnoverify
 
 -------------------------------------------------------
 
-Fongo nutzen:
+Fongo nutzen (Snippet: nosqlunit-mongodb.txt)
 
 <dependency>
 	<groupId>com.lordofthejars</groupId>
@@ -87,8 +93,7 @@ ggf. Integrationstest dazu schreiben
 
 -------------------------------------------------------
 
-list-Methode anlegen und zwei h3 headings mit Verknüpfung auf toll und doof
-
+Controller anlegen:
 
 @Controller
 public class BewerterController {
@@ -162,15 +167,19 @@ rating.html anlegen -> siehe Vorlage html_page_blank.html
 -------------------------------------------------------
 
 Danach jquery-Mobile hinzufügen:
-- siehe Snippet
+- siehe Snippet jquery-mobile-header.txt
 
 -------------------------------------------------------
 
 Dockerfile anlegen:
 
-	FROM java:8
+	FFROM java:8
 
 	COPY target/bewerter-0.0.1-SNAPSHOT.jar bewerter.jar
+
+	ENV spring.profiles.active dev
+
+	EXPOSE 8080
 
 	ENTRYPOINT ["java","-jar","/bewerter.jar"]
 
@@ -207,7 +216,7 @@ Images auflisten:
     docker images
 
 Image lokal starten:
-    docker run -d fred4jupiter/bewerter -p 8080:8080 -e spring.profiles.active=dev
+    docker run -d -p 8080:8080 -e spring.profiles.active=dev fred4jupiter/bewerter
 
 -------------------------------------------------------
 
@@ -231,7 +240,10 @@ docker push tutum.co/fred4jupiter/bewerter
 
 ---
 
+Service anlegen oder direkt Stackfile:
+
 Services -> Create Service -> Select Images -> Private Repository
+Service Name: bewerter
 Image Tag: Latest
 Deployment Strategy: Emptiest Node
 Number of Containers: 1
@@ -244,11 +256,29 @@ unter Endpoints URL anschauen
 
 ---------------
 
-ggf. Stack anlegen
-Stackfile:
+ggf. Stack anlegen (Snippet: tutum_stack_file.txt)
 
-bewerter:
-  image: 'tutum.co/fred4jupiter/bewerter:latest'  
-  ports:
-    - '80:8080'
+	bewerter:
+	  image: 'tutum.co/fred4jupiter/bewerter:latest'
+	  environment:
+		- spring.profiles.active=test
+	  links:
+		- mongodb
+	  ports:
+		- '80:8080'
+	mongodb:
+	  image: 'mongo:latest'
+	  command: 'mongod --smallfiles'
+	  expose:
+		- '27017'
+	  volumes:
+		- '/var/lib/mongodb/bewerter/test:/data/db'
 
+Online unter: http://bewerter.bewerter.fred4jupiter.svc.tutum.io/
+
+---------------
+
+optional:
+
+- in Node einloggen, z.B.:
+   ssh root@52.28.28.224
