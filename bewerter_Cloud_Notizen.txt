@@ -11,7 +11,7 @@ Boot Version: 1.2.5
 
 -------------------------------------------------------
 
-spring.thymeleaf.cache=false   in application.properties eintragen
+spring.thymeleaf.cache=false   in application-dev.properties eintragen
 
 -------------------------------------------------------
 
@@ -31,6 +31,7 @@ Fongo nutzen:
 
 -------------------------------------------------------
 
+@Profile("dev")
 @Configuration
 @EnableMongoRepositories
 public class MongoEmbeddedConfig extends AbstractMongoConfiguration {
@@ -68,31 +69,6 @@ public class Rating {
         this.name = name;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public Integer getToll() {
-        return toll;
-    }
-
-    public void setToll(Integer toll) {
-        this.toll = toll;
-    }
-
-    public Integer getDoof() {
-        return doof;
-    }
-
-    public void setDoof(Integer doof) {
-        this.doof = doof;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-
     public void incrementToll() {
         this.toll++;
     }
@@ -100,6 +76,8 @@ public class Rating {
     public void incrementDoof() {
         this.doof++;
     }
+	
+	... getter, setter ...
 }
 
 -------------------------------------------------------
@@ -150,6 +128,8 @@ public class BewerterController {
 
 -------------------------------------------------------
 
+rating.html anlegen -> siehe Vorlage html_page_blank.html
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="de">
 <head>
@@ -186,15 +166,13 @@ Danach jquery-Mobile hinzufügen:
 
 -------------------------------------------------------
 
-
 Dockerfile anlegen:
 
-FROM java:8
+	FROM java:8
 
-COPY target/bewerter-0.0.1-SNAPSHOT.jar bewerter.jar
+	COPY target/bewerter-0.0.1-SNAPSHOT.jar bewerter.jar
 
-ENTRYPOINT ["java","-jar","/bewerter.jar"]
-
+	ENTRYPOINT ["java","-jar","/bewerter.jar"]
 
 -------------------------------------------------------
 
@@ -220,15 +198,16 @@ ggf. plugin nutzen:
 -------------------------------------------------------
 
 Image bauen:
-    mvn clean install docker:build
-oder
+	mvn clean install
     docker build -t fred4jupiter/bewerter .
+bzw.    
+	mvn clean install docker:build
 
 Images auflisten:
     docker images
 
 Image lokal starten:
-    docker run -d fred4jupiter/bewerter -p 8080:8080
+    docker run -d fred4jupiter/bewerter -p 8080:8080 -e spring.profiles.active=dev
 
 -------------------------------------------------------
 
