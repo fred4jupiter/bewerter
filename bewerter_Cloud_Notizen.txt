@@ -22,8 +22,14 @@ application-test.properties:
 
 ggf. spring loaded verwenden:
 
+<groupId>org.springframework</groupId>
+<artifactId>springloaded</artifactId>
+<version>1.2.4.RELEASE</version>
+
+in spring-boot-maven-plugin
+
 VM-Arguments: 
--Djavaagent:/home/michael/springloaded-1.2.4.RELEASE.jar -Dnoverify
+-javaagent:/home/michael/springloaded-1.2.4.RELEASE.jar -noverify
 
 -------------------------------------------------------
 
