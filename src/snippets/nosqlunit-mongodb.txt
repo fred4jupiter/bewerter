@@ -1,5 +1,0 @@
-<dependency>
-	<groupId>com.lordofthejars</groupId>
-	<artifactId>nosqlunit-mongodb</artifactId>
-	<version>0.8.1</version>
-</dependency>
